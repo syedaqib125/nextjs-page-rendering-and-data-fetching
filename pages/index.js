@@ -14,6 +14,11 @@ export default function Home(props) {
     </Fragment>
   );
 }
+// Static Site Generation fetch all data while build prepare and rendered pre rendered data as static ,
+// npm run dev start serve as development
+// after run npm run build cmd you can start production server on your local machine with npm start
+// recomended mostly SSG as compare to SSR
+// because SSR generate while server call but SSG pre fetched all data while buil process and shows all data as static
 
 export const getStaticProps = async () => {
   const filePath = path.join(process.cwd(), "data", "dummy-backend.json");
@@ -23,5 +28,6 @@ export const getStaticProps = async () => {
     props: {
       products: data.products,
     },
+    revalidate: 10, // ISR Incremental Static Generation which work as useEffect to update page after given time completed
   };
 };
