@@ -1,6 +1,7 @@
 import { Fragment } from "react";
 import fs from "fs/promises";
 import path from "path";
+import Link from "next/link";
 
 export default function Home(props) {
   const { products } = props;
@@ -8,7 +9,18 @@ export default function Home(props) {
     <Fragment>
       <ul>
         {products.map((product) => {
-          return <li key={product.id}>{product.title}</li>;
+          return (
+            <li key={product.id}>
+              <Link
+                href={{
+                  pathname: "/[pid]",
+                  query: { pid: product.id },
+                }}
+              >
+                {product.title}
+              </Link>
+            </li>
+          );
         })}
       </ul>
     </Fragment>
