@@ -28,6 +28,13 @@ export const getStaticProps = async (context) => {
   const productID = params.pid;
   const data = await getData();
   const product = data.products.find((product) => product.id === productID);
+
+  if (!product) {
+    //condition-- if we have no data on that id next js through an error if fallback is true ,its initially load
+    //the data and loading screen will appear first then it will through an error on screen
+    //so with true fallnack we use notFound key in getStaticProps if data not found it will redirect to 404 page after loading screen disappear
+    return { notFound: true };
+  }
   return {
     props: {
       loadedProduct: product,
