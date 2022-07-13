@@ -15,14 +15,18 @@ const ProductDetail = (props) => {
     </Fragment>
   );
 };
-export const getStaticProps = async (context) => {
-  const { params } = context;
-  const productID = params.pid;
 
+const getData = async () => {
   const filePath = path.join(process.cwd(), "data", "dummy-backend.json");
   const jsonData = await fs.readFile(filePath);
   const data = JSON.parse(jsonData);
+  return data;
+};
 
+export const getStaticProps = async (context) => {
+  const { params } = context;
+  const productID = params.pid;
+  const data = await getData();
   const product = data.products.find((product) => product.id === productID);
   return {
     props: {
@@ -32,12 +36,18 @@ export const getStaticProps = async (context) => {
 };
 
 export const getStaticPaths = async () => {
+  const data = await getData(); //loading paths dynamically
+  const ids = data.products.map((product) => product.id);
+  const pathsWithParams = ids.map((id) => {
+    return { params: { pid: id } };
+  });
   return {
-    paths: [
-      { params: { pid: "p1" } },
-      { params: { pid: "p2" } },
-      // { params: { pid: "p3" } },
-    ],
+    // paths: [
+    //   { params: { pid: "p1" } },
+    //   { params: { pid: "p2" } },
+    //   // { params: { pid: "p3" } },
+    // ],
+    paths: pathsWithParams,
     fallback: true,
     //1-fallback "false" take care of only those pages whom id's are mentioned there else shows 404 page
 
